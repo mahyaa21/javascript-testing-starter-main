@@ -1,5 +1,5 @@
 import { describe, test, it, expect } from "vitest";
-import { fizzBuzz, max } from "../intro";
+import { calculateAverage, fizzBuzz, max } from "../intro";
 
 describe("max", () => {
 	//this is function which called by test runners
@@ -42,3 +42,21 @@ describe("FizzBuzz", () => {
     // .toBeDefined always show true even if production code and test code are different
   });
 });
+
+describe("calculateAverage", () => {
+  it("should return NAN if array is empty", () => {
+    expect(calculateAverage([])).toBe(NaN);
+  })
+  it("should calculate the average of an array with a single number", () => {
+    expect(calculateAverage([1])).toBe(1);
+  })
+
+  it("should calculate the average of an array with a two number", () => {
+    expect(calculateAverage([1, 2])).toBe(1.5);
+  })
+
+  it("should calculate the average of an array with a three number", () => {
+    expect(calculateAverage([1, 2, 3])).toBe(2);
+  })
+
+})
