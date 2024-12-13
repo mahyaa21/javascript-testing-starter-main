@@ -13,7 +13,40 @@ This repository contains all of the examples and exercises for my JavaScript tes
 * Improve code quality with static analysis, including TypeScript, ESLint, and Prettier.
 * Automate code quality checks with Husky to maintain high coding standards.
 
+* Comparing objects
+.toMachObject
+.toHaveProperty
+.toEqual
 
-You can find the full course at: 
+* Equality
+.toBe for primitive values
+.toBeNull for null values
+.toBeUndefined
+
+* Truthiness
+.toBeDefined
+.toBeTruthy
+.toBeFalsy
+
+* Numerical comparison
+.toBeGreaterThan
+.toBeGreaterThanOrEqual
+.toBeLessThan
+.toBeLessThanOrEqual
+.toBeCloseTo
+
+* String comparison
+.toContain
+.toMatch
+
+* Array
+.toContain
+.toHaveLength
+
+* Exceptions
+.toThrowError
+
+
+You can find the full course at:
 
 https://codewithmosh.com
