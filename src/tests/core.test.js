@@ -1,4 +1,12 @@
-import { it, expect, describe } from "vitest";
+import {
+	it,
+	expect,
+	describe,
+	beforeAll,
+	afterAll,
+	beforeEach,
+	afterEach,
+} from "vitest";
 import {
 	calculateDiscount,
 	getCoupons,
@@ -7,7 +15,7 @@ import {
 	isValidUsername,
 	canDrive,
 	fetchData,
-	fetchRejectedData
+	fetchRejectedData,
 } from "../core.js";
 
 describe("Test Suit", () => {
@@ -249,4 +257,22 @@ describe("fetchRejectedData", () => {
 			expect(error.reason).toMatch(/fail/i);
 		}
 	});
+});
+
+describe("group", () => {
+	beforeAll(() => {
+		console.log("before All called!");
+	});
+	beforeEach(() => {
+		console.log("before Each called!");
+	});
+	afterEach(() => {
+		console.log("after Each called!");
+	});
+	afterAll(() => {
+		console.log("after All called!");
+	});
+	it("test case 1", () => {});
+	it("test case 2", () => {});
+
 });
