@@ -1,7 +1,7 @@
 import { vi, it, expect, describe } from "vitest";
-import { getPriceInCurrency } from "../mocking";
+import { getPriceInCurrency, getShippingInfo } from "../mocking";
 import { getExchangeRate } from "../libs/currency";
-
+import { getShippingQuote } from "../libs/shipping";
 // Mock Function
 describe("test suite", () => {
 	it("test case", () => {
@@ -34,21 +34,36 @@ describe("senText", () => {
 	});
 });
 
-
 // Mock the module and its function
 vi.mock("../libs/currency", () => ({
-  getExchangeRate: vi.fn(),
+	getExchangeRate: vi.fn(),
 }));
 
 describe("getPriceInCurrency", () => {
-  it("should return price in target range", () => {
-    // Mock the return value of getExchangeRate
-    getExchangeRate.mockReturnValue(1.5); // Mocking exchange rate as 1.5
+	it("should return price in target range", () => {
+		// Mock the return value of getExchangeRate
+		getExchangeRate.mockReturnValue(1.5); // Mocking exchange rate as 1.5
 
-    const price = getPriceInCurrency(10, "AUD");
+		const price = getPriceInCurrency(10, "AUD");
 
-    // Test the expected outcome
-    expect(price).toBe(15);
-  });
+		// Test the expected outcome
+		expect(price).toBe(15);
+	});
 });
 
+vi.mock("../libs/shipping", () => ({
+	getShippingQuote: vi.fn(),
+}));
+
+describe("getShippingInfo", () => {
+	it("should return shipping unavailable", () => {
+		getShippingQuote.mockReturnValue(null);
+		const shippingInfo = getShippingInfo();
+		expect(shippingInfo).toMatch(/unavailable/i);
+	});
+	it("should return shipping info", () => {
+		getShippingQuote.mockReturnValue({ cost: 10, estimatedDays: 2 });
+		const shippingInfo = getShippingInfo("New York");
+		expect(shippingInfo).toBe("Shipping Cost: $10 (2 Days)");
+	});
+});
