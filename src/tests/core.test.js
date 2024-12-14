@@ -5,6 +5,7 @@ import {
 	validateUserInput,
 	isPriceInRange,
 	isValidUsername,
+	canDrive,
 } from "../core.js";
 
 describe("Test Suit", () => {
@@ -137,9 +138,29 @@ describe("isValidUsername", () => {
 		expect(isValidUsername("m".repeat(maxLength - 1))).toBe(true);
 		expect(isValidUsername("m".repeat(minLength + 1))).toBe(true);
 	});
-  it("should return false for invalid inout types", () => {
-    expect(isValidUsername(1)).toBe(false);
-    expect(isValidUsername(null)).toBe(false);
-    expect(isValidUsername(undefined)).toBe(false);
+	it("should return false for invalid inout types", () => {
+		expect(isValidUsername(1)).toBe(false);
+		expect(isValidUsername(null)).toBe(false);
+		expect(isValidUsername(undefined)).toBe(false);
+	});
+});
+
+describe("canDrive", () => {
+	it("should return false if the country code is invalid", () => {
+		expect(canDrive(18, "FR")).toMatch(/invalid/i);
+	});
+	it("should return false if the age is less than 16", () => {
+		expect(canDrive(10, "US")).toBe(false);
+		expect(canDrive(10, "UK")).toBe(false);
+	});
+	it("should return false if the age is less than 16 and the country code is UK", () => {
+		expect(canDrive(16, "UK")).toBe(false);
+	});
+  it("should return true if the age is greater than or equal to 16 and the country code is US", () => {
+    expect(canDrive(16, "US")).toBe(true);
+  });
+  it("should return true if the age is greater than or equal to 17 and the country code is valid", () => {
+    expect(canDrive(20, "US")).toBe(true);
+    expect(canDrive(20, "UK")).toBe(true);
   })
 });
