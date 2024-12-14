@@ -16,6 +16,7 @@ import {
 	canDrive,
 	fetchData,
 	fetchRejectedData,
+	Stack,
 } from "../core.js";
 
 describe("Test Suit", () => {
@@ -258,7 +259,7 @@ describe("fetchRejectedData", () => {
 		}
 	});
 });
-
+// tier down
 describe("group", () => {
 	beforeAll(() => {
 		console.log("before All called!");
@@ -274,5 +275,53 @@ describe("group", () => {
 	});
 	it("test case 1", () => {});
 	it("test case 2", () => {});
-
+});
+// testing a class
+describe("Stack", () => {
+	let stack;
+	beforeEach(() => {
+		stack = new Stack();
+	});
+	it("push should add an item to the stack", () => {
+		stack.push(1);
+		expect(stack.size()).toBe(1);
+	});
+	it("pop should add an item from the stack", () => {
+		stack.push(1);
+		stack.push(2);
+		const result = stack.pop();
+		expect(stack.size()).toBe(1);
+		expect(result).toBe(2);
+	});
+	it("should throw an error if the stack is empty", () => {
+		expect(() => stack.pop()).toThrow(/empty/i);
+	});
+	it("peek should return the top item from the stack", () => {
+		stack.push(1);
+		stack.push(2);
+		const peekedItem = stack.peek();
+		expect(peekedItem).toBe(2);
+		expect(stack.size()).toBe(2);
+	});
+	it("peek should throw an error if stack is empty", () => {
+		expect(() => stack.peek()).toThrow(/empty/i);
+	});
+	it("isEmpty should return true if the stack is empty", () => {
+		expect(stack.isEmpty()).toBe(true);
+	});
+	it("isEmpty should return false if the stack is not empty", () => {
+		stack.push(1);
+		expect(stack.isEmpty()).toBe(false);
+	});
+	it("size should return the number of items", () => {
+		stack.push(1);
+		stack.push(2);
+		expect(stack.size()).toBe(2);
+	});
+	it("clear should remove all items in  the stack", () => {
+		stack.push(1);
+		stack.push(2);
+		stack.clear()
+		expect(stack.size()).toBe(0);
+	});
 });
