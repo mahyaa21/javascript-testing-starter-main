@@ -4,6 +4,7 @@ import {
 	getCoupons,
 	validateUserInput,
 	isPriceInRange,
+	isValidUsername,
 } from "../core.js";
 
 describe("Test Suit", () => {
@@ -108,15 +109,37 @@ describe("validateUserInput", () => {
 
 describe("isPriceInRange", () => {
 	it("should return false if the price is outside the range", () => {
-    expect(isPriceInRange(10, 20, 30)).toBe(false);
-    expect(isPriceInRange(200, 20, 30)).toBe(false);
-  });
-  // Boundary test
-  it("should return true if the price is equal to min or the max", () => {
-    expect(isPriceInRange(20, 20, 30)).toBe(true);
-    expect(isPriceInRange(30, 20, 30)).toBe(true);
-  });
-  it("should return true when the price is in the range", () => {
-    expect(isPriceInRange(22, 20, 30)).toBe(true);
-  });
+		expect(isPriceInRange(10, 20, 30)).toBe(false);
+		expect(isPriceInRange(200, 20, 30)).toBe(false);
+	});
+	// Boundary test
+	it("should return true if the price is equal to min or the max", () => {
+		expect(isPriceInRange(20, 20, 30)).toBe(true);
+		expect(isPriceInRange(30, 20, 30)).toBe(true);
+	});
+	it("should return true when the price is in the range", () => {
+		expect(isPriceInRange(22, 20, 30)).toBe(true);
+	});
+});
+
+describe("isValidUsername", () => {
+	const minLength = 5;
+	const maxLength = 15;
+	it("should return false if the username is outside the range", () => {
+		expect(isValidUsername("m".repeat(minLength - 1))).toBe(false);
+		expect(isValidUsername("m".repeat(maxLength + 1))).toBe(false);
+	});
+	it("should return true if the username is equal to min or the max", () => {
+		expect(isValidUsername("m".repeat(maxLength))).toBe(true);
+		expect(isValidUsername("m".repeat(minLength))).toBe(true);
+	});
+	it("should return true if the username is in the range", () => {
+		expect(isValidUsername("m".repeat(maxLength - 1))).toBe(true);
+		expect(isValidUsername("m".repeat(minLength + 1))).toBe(true);
+	});
+  it("should return false for invalid inout types", () => {
+    expect(isValidUsername(1)).toBe(false);
+    expect(isValidUsername(null)).toBe(false);
+    expect(isValidUsername(undefined)).toBe(false);
+  })
 });
