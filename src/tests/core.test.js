@@ -6,6 +6,8 @@ import {
 	isPriceInRange,
 	isValidUsername,
 	canDrive,
+	fetchData,
+	fetchRejectedData
 } from "../core.js";
 
 describe("Test Suit", () => {
@@ -215,10 +217,36 @@ describe("isPriceInRange", () => {
 		{ scenario: "price = min", price: 20, result: true },
 		{ scenario: "price = min", price: 30, result: true },
 		{ scenario: "min > price < max", price: 22, result: true },
-	])(
-		"should return $result when $scenario",
-		({ scenario, price, result }) => {
-			expect(isPriceInRange(price, min, max)).toBe(result);
+	])("should return $result when $scenario", ({ scenario, price, result }) => {
+		expect(isPriceInRange(price, min, max)).toBe(result);
+	});
+});
+
+// Test asynchronous
+describe("fetchData", () => {
+	it("should return a promise that will resolve to an array of numbers", async () => {
+		try {
+			const result = await fetchData();
+			expect(Array.isArray(result)).toBe(true);
+			expect(result.length).toBeGreaterThan(0);
+		} catch (error) {
+			expect(error).toHaveProperty("reason");
+			expect(error.reason).toMatch(/fail/i);
 		}
-	);
+		fetchData().then((result) => {
+			expect(Array.isArray(result)).toBe(true);
+			expect(result.length).toBeGreaterThan(0);
+		});
+	});
+});
+
+describe("fetchRejectedData", () => {
+	it("should return a promise that will reject the promise and show result", async () => {
+		try {
+			const result = await fetchRejectedData();
+		} catch (error) {
+			expect(error).toHaveProperty("reason");
+			expect(error.reason).toMatch(/fail/i);
+		}
+	});
 });
