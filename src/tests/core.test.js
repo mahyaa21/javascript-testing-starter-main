@@ -156,11 +156,69 @@ describe("canDrive", () => {
 	it("should return false if the age is less than 16 and the country code is UK", () => {
 		expect(canDrive(16, "UK")).toBe(false);
 	});
-  it("should return true if the age is greater than or equal to 16 and the country code is US", () => {
-    expect(canDrive(16, "US")).toBe(true);
-  });
-  it("should return true if the age is greater than or equal to 17 and the country code is valid", () => {
-    expect(canDrive(20, "US")).toBe(true);
-    expect(canDrive(20, "UK")).toBe(true);
-  })
+	it("should return true if the age is greater than or equal to 16 and the country code is US", () => {
+		expect(canDrive(16, "US")).toBe(true);
+	});
+	it("should return true if the age is greater than or equal to 17 and the country code is valid", () => {
+		expect(canDrive(20, "US")).toBe(true);
+		expect(canDrive(20, "UK")).toBe(true);
+	});
+});
+
+// Parameterize Tests
+describe("canDrive", () => {
+	it.each([
+		{
+			age: 15,
+			country: "US",
+			result: false,
+		},
+		{
+			age: 16,
+			country: "US",
+			result: true,
+		},
+		{
+			age: 17,
+			country: "US",
+			result: true,
+		},
+		{
+			age: 16,
+			country: "UK",
+			result: false,
+		},
+		{
+			age: 17,
+			country: "UK",
+			result: true,
+		},
+		{
+			age: 18,
+			country: "UK",
+			result: true,
+		},
+	])(
+		"should return $result for ($age, $country)",
+		({ age, country, result }) => {
+			expect(canDrive(age, country)).toBe(result);
+		}
+	);
+});
+
+describe("isPriceInRange", () => {
+	const min = 20;
+	const max = 30;
+	it.each([
+		{ scenario: "price < min", price: 10, result: false },
+		{ scenario: "price > max", price: 200, result: false },
+		{ scenario: "price = min", price: 20, result: true },
+		{ scenario: "price = min", price: 30, result: true },
+		{ scenario: "min > price < max", price: 22, result: true },
+	])(
+		"should return $result when $scenario",
+		({ scenario, price, result }) => {
+			expect(isPriceInRange(price, min, max)).toBe(result);
+		}
+	);
 });
