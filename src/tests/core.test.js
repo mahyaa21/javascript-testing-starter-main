@@ -1,5 +1,10 @@
 import { it, expect, describe } from "vitest";
-import { calculateDiscount, getCoupons, validateUserInput } from "../core.js";
+import {
+	calculateDiscount,
+	getCoupons,
+	validateUserInput,
+	isPriceInRange,
+} from "../core.js";
 
 describe("Test Suit", () => {
 	it("is string good assertion test case", () => {
@@ -83,7 +88,7 @@ describe("validateUserInput", () => {
 	it("should return errors if username length is less than 3", () => {
 		expect(validateUserInput("ab", 20)).toMatch(/invalid/i);
 	});
-  it("should return errors if username length is greater than 255", () => {
+	it("should return errors if username length is greater than 255", () => {
 		expect(validateUserInput("A".repeat(256), 20)).toMatch(/invalid/i);
 	});
 	it("should return errors if age is non-number", () => {
@@ -92,12 +97,26 @@ describe("validateUserInput", () => {
 	it("should return errors if age is less than 18", () => {
 		expect(validateUserInput("mahya", 15)).toMatch(/invalid/i);
 	});
-  it("should return errors if both username and age are invalid", () => {
-		expect(validateUserInput('', 0)).toMatch(/invalid username/i);
-    expect(validateUserInput('', 0)).toMatch(/invalid age/i);
-
+	it("should return errors if both username and age are invalid", () => {
+		expect(validateUserInput("", 0)).toMatch(/invalid username/i);
+		expect(validateUserInput("", 0)).toMatch(/invalid age/i);
 	});
 	it("should return success message if username and age are valid", () => {
-    expect(validateUserInput("mahya", 20)).toMatch(/success/i);
+		expect(validateUserInput("mahya", 20)).toMatch(/success/i);
+	});
+});
+
+describe("isPriceInRange", () => {
+	it("should return false if the price is outside the range", () => {
+    expect(isPriceInRange(10, 20, 30)).toBe(false);
+    expect(isPriceInRange(200, 20, 30)).toBe(false);
+  });
+  // Boundary test
+  it("should return true if the price is equal to min or the max", () => {
+    expect(isPriceInRange(20, 20, 30)).toBe(true);
+    expect(isPriceInRange(30, 20, 30)).toBe(true);
+  });
+  it("should return true when the price is in the range", () => {
+    expect(isPriceInRange(22, 20, 30)).toBe(true);
   });
 });
