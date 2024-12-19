@@ -1,7 +1,8 @@
 import { vi, it, expect, describe } from "vitest";
-import { getPriceInCurrency, getShippingInfo } from "../mocking";
+import { getPriceInCurrency, getShippingInfo, renderPage } from "../mocking";
 import { getExchangeRate } from "../libs/currency";
 import { getShippingQuote } from "../libs/shipping";
+import { trackPageView } from "../libs/analytics";
 // Mock Function
 describe("test suite", () => {
 	it("test case", () => {
@@ -65,5 +66,21 @@ describe("getShippingInfo", () => {
 		getShippingQuote.mockReturnValue({ cost: 10, estimatedDays: 2 });
 		const shippingInfo = getShippingInfo("New York");
 		expect(shippingInfo).toBe("Shipping Cost: $10 (2 Days)");
+	});
+});
+
+vi.mock("../libs/analytics", () => ({
+	trackPageView: vi.fn(),
+}));
+
+describe("renderPage", () => {
+	it("should render page", async () => {
+		const result = await renderPage();
+		expect(result).toMatch(/content/i);
+	});
+
+	it("should call analytics", async () => {
+		await renderPage();
+		expect(trackPageView).toHaveBeenCalledWith("/home");
 	});
 });
