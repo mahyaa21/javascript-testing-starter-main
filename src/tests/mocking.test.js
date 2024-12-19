@@ -147,7 +147,7 @@ describe('signup', () => {
     expect(result).toBe(true);
   });
   it('should send the welcome email if the email is valid', async () => {
-    const result = await signUp(email);
+    await signUp(email);
     expect(sendEmail).toHaveBeenCalledOnce();
     const args = sendEmail.mock.calls[0];
     expect(args[0]).toBe(email);
