@@ -6,6 +6,7 @@ import {
 	signUp,
 	login,
 	isOnline,
+	getDiscount,
 } from "../mocking";
 import { getExchangeRate } from "../libs/currency";
 import { getShippingQuote } from "../libs/shipping";
@@ -187,5 +188,22 @@ describe("isOnline", () => {
 	it("should return false if the current our is on closing hour", () => {
 		vi.setSystemTime("2024-01-01 20:00");
 		expect(isOnline()).toBe(false);
+	});
+});
+
+describe("getDiscount", () => {
+	it("should return 0 if the day is outside of christmas", () => {
+		vi.setSystemTime("2024-12-24 00:01");
+		expect(getDiscount()).toBe(0);
+
+		vi.setSystemTime("2024-12-26 00:01");
+		expect(getDiscount()).toBe(0);
+	});
+	it("should return 0.2 if the day is a christmas day", () => {
+		vi.setSystemTime("2024-12-25 00:01");
+		expect(getDiscount()).toBe(0.2);
+
+		vi.setSystemTime("2024-12-25 23:59");
+		expect(getDiscount()).toBe(0.2);
 	});
 });
