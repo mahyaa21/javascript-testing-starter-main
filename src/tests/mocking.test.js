@@ -1,8 +1,16 @@
 import { vi, it, expect, describe } from "vitest";
-import { getPriceInCurrency, getShippingInfo, renderPage } from "../mocking";
+import {
+	getPriceInCurrency,
+	getShippingInfo,
+	renderPage,
+	signUp,
+} from "../mocking";
 import { getExchangeRate } from "../libs/currency";
 import { getShippingQuote } from "../libs/shipping";
 import { trackPageView } from "../libs/analytics";
+import { submitOrder } from "../mocking";
+import { charge } from "../libs/payment";
+import { sendEmail } from "../libs/email";
 // Mock Function
 describe("test suite", () => {
 	it("test case", () => {
@@ -82,5 +90,57 @@ describe("renderPage", () => {
 	it("should call analytics", async () => {
 		await renderPage();
 		expect(trackPageView).toHaveBeenCalledWith("/home");
+	});
+});
+
+vi.mock("../libs/payment.js", () => ({
+	charge: vi.fn(),
+}));
+
+describe("submitOrder", () => {
+	const order = {
+		totalAmount: 10,
+	};
+	const creditCard = { creditCardNumber: "1234" };
+	it("should charge the customer", async () => {
+		charge.mockResolvedValue({ status: "success" });
+		await submitOrder(order, creditCard);
+		expect(charge).toHaveBeenCalledWith(creditCard, order.totalAmount);
+	});
+	it("should return success when payment is successful", async () => {
+		charge.mockResolvedValue({ status: "success" });
+		const result = await submitOrder(order, creditCard);
+		expect(result).toEqual({ success: true });
+	});
+	it("should return false when payment is failed ", async () => {
+		charge.mockResolvedValue({ status: "failed" });
+		const result = await submitOrder(order, creditCard);
+		expect(result).toEqual({ success: false, error: "payment_error" });
+	});
+});
+// Partial mocking
+vi.mock("../libs/email.js", async (importOriginal) => {
+	const originalModule = await importOriginal();
+	return {
+		...originalModule, // keep all other functions original and just mock sendEmail
+		sendEmail: vi.fn(),
+	};
+});
+describe("signup", () => {
+	const email = "name@domain.com";
+	it("should return false if the email is invalid", async () => {
+		const result = await signUp("a");
+		expect(result).toBe(false);
+	});
+	it("should return true if the email is valid", async () => {
+		const result = await signUp(email);
+		expect(result).toBe(true);
+	});
+	it("should send the welcome email if the email is valid", async () => {
+		const result = await signUp(email);
+		expect(sendEmail).toHaveBeenCalled();
+		const args = sendEmail.mock.calls[0]
+		expect(args[0]).toBe(email);
+		expect(args[1]).toMatch(/welcome/i)
 	});
 });
